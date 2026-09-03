@@ -8,6 +8,7 @@ arch:
   - armv7
 init: false
 host_network: true
+documentation: true
 options:
   targets:
     - name: "Modem"
@@ -19,4 +20,4 @@ schema:
     - name: "str?"
       target_ip: str
       target_host: str
-      listen_port: int
+      listen_port: "port"

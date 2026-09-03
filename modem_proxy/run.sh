@@ -20,11 +20,23 @@ while [ "$i" -lt "$COUNT" ]; do
 
     case " $USED_PORTS " in
         *" $LISTEN_PORT "*)
-            echo "Modem Proxy: WAARSCHUWING - poort $LISTEN_PORT is al in gebruik door een eerdere target, '$NAME' ($TARGET_IP) wordt overgeslagen."
+            echo "Modem Proxy: WAARSCHUWING - poort $LISTEN_PORT is al in gebruik door een eerdere target in deze app, '$NAME' ($TARGET_IP) wordt overgeslagen."
             i=$((i + 1))
             continue
             ;;
     esac
+
+    # host_network:true betekent dat deze container het netwerk van het HA-systeem zelf deelt,
+    # dus een poort die hier al beantwoordt, is een echte botsing met iets anders op die machine
+    # (HA zelf, MQTT, SSH, een andere host_network-app, ...) - niet alleen met een andere regel
+    # hieronder. nc geeft bij twijfel/fout geen duidelijk resultaat; behandel dat dan als "vrij"
+    # zodat een tooling-hik nooit stilzwijgend een correct geconfigureerd target laat verdwijnen.
+    if nc -z -w 1 127.0.0.1 "$LISTEN_PORT" 2>/dev/null; then
+        echo "Modem Proxy: WAARSCHUWING - poort $LISTEN_PORT is al in gebruik door iets anders op dit systeem (niet deze app), '$NAME' ($TARGET_IP) wordt overgeslagen. Kies een andere listen_port."
+        i=$((i + 1))
+        continue
+    fi
+
     USED_PORTS="$USED_PORTS $LISTEN_PORT"
 
     cat > "$CONFIG_DIR/target-$i.conf" <<EOF
