@@ -1,5 +1,5 @@
-name: "Modem Proxy"
-version: "2.0.0"
+name: "Stroomregie Proxy"
+version: "2.1.0"
 slug: "modem_proxy"
 description: "Reverse proxy naar meerdere interne apparaten (modem, Marstek, Smart EVSE, ...), elk met een eigen poort en Host-header"
 arch:

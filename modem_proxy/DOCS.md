@@ -1,4 +1,4 @@
-# Modem Proxy — poorten
+# Stroomregie Proxy — poorten
 
 Deze app draait met `host_network: true`: hij deelt het netwerk van je Home Assistant-systeem
 rechtstreeks. Dat is nodig om apparaten op elk intern IP-adres te kunnen bereiken, maar betekent
